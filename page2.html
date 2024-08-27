@@ -4,7 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>問卷調查</title>
+    <title>以聲服人聲音研究_開始問卷</title>
+    <style>
+        .slider-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .slider-container img {
+            width: 50px;
+            height: 50px;
+            margin: 0 10px;
+        }
+
+        .slider {
+            flex: 1;
+        }
+
+        .slider-value {
+            width: 50px;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -23,21 +45,58 @@
         <input type="hidden" name="entry.367896919" id="audioNumber">
         <input type="hidden" name="entry.1898504299" id="timeTaken">
 
-        <label for="feeling">感受量表（-5 到 5）：</label>
-        <input type="number" name="entry.1295919402" id="feeling" min="-5" max="5" required>
-        <br><br>
+        <!-- 感受量表 -->
+        <label class="question-label" for="feeling">感受量表（-5 到 5）：</label>
+        <div class="slider-container">
+            <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/FS-.svg?raw=true"" alt="
+                低感受"> <!-- 左側示意圖 -->
+            <input type="range" class="slider" id="feelingSlider" min="-5" max="5" value="0"
+                oninput="syncSlider('feelingSlider', 'feeling')">
+            <input type="number" name="entry.1295919402" id="feeling" min="-5" max="5" value="0" class="slider-value"
+                oninput="syncInput('feeling', 'feelingSlider')" required>
+            <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/FS+.svg?raw=true"" alt="
+                高感受"> <!-- 右側示意圖 -->
+        </div>
 
-        <label for="arousal">感覺喚醒量表（1 到 6）：</label>
-        <input type="number" name="entry.557372817" id="arousal" min="1" max="6" required>
-        <br><br>
+        <!-- 感覺喚醒量表 -->
+        <label class="question-label" for="arousal">感覺喚醒量表（1 到 6）：</label>
+        <div class="slider-container">
+            <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/FAS.svg?raw=true"" alt="
+                低喚起"> <!-- 左側示意圖 -->
+            <input type="range" class="slider" id="arousalSlider" min="1" max="6" value="3"
+                oninput="syncSlider('arousalSlider', 'arousal')">
+            <input type="number" name="entry.557372817" id="arousal" min="1" max="6" value="3" class="slider-value"
+                oninput="syncInput('arousal', 'arousalSlider')" required>
+            <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/FAS6.svg?raw=true"" alt="
+                高喚起"> <!-- 右側示意圖 -->
+        </div>
 
-        <label for="euphony">悅耳度評分（0 到 10）：</label>
-        <input type="number" name="entry.1179291034" id="euphony" min="0" max="10" required>
-        <br><br>
+        <!-- 悅耳度評分 -->
+        <label class="question-label" for="euphony">悅耳度評分（0 到 10）：</label>
+        <div class="slider-container">
+            <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/non-Euphony.webp?raw=true"
+                alt="低和諧度"> <!-- 左側示意圖 -->
+            <input type="range" class="slider" id="euphonySlider" min="0" max="10" value="5"
+                oninput="syncSlider('euphonySlider', 'euphony')">
+            <input type="number" name="entry.1179291034" id="euphony" min="0" max="10" value="5" class="slider-value"
+                oninput="syncInput('euphony', 'euphonySlider')" required>
+            <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/Euphony.webp?raw=true"
+                alt="高和諧度"> <!-- 右側示意圖 -->
+        </div>
 
-        <label for="investment">投資意向評分（0 到 10）：</label>
-        <input type="number" name="entry.1743600620" id="investment" min="0" max="10" required>
-        <br><br>
+        <!-- 投資意向評分 -->
+        <label class="question-label" for="investment">投資意向評分（0 到 10）：</label>
+        <div class="slider-container">
+            <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/Investment_Intent_L.webp?raw=true"
+                alt="低投資意向"> <!-- 左側示意圖 -->
+            <input type="range" class="slider" id="investmentSlider" min="0" max="10" value="5"
+                oninput="syncSlider('investmentSlider', 'investment')">
+            <input type="number" name="entry.1743600620" id="investment" min="0" max="10" value="5" class="slider-value"
+                oninput="syncInput('investment', 'investmentSlider')" required>
+            <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/Investment_Intent_H.webp?raw=true"
+                alt="高投資意向"> <!-- 右側示意圖 -->
+        </div>
+
 
         <input type="submit" id="submitButton" value="開始測驗">
     </form>
@@ -46,6 +105,15 @@
         let submitted = false;
         let currentIndex = 0;
         let startTime;
+
+        // 同步滑動條和數字框的值
+        function syncSlider(sliderId, inputId) {
+            document.getElementById(inputId).value = document.getElementById(sliderId).value;
+        }
+
+        function syncInput(inputId, sliderId) {
+            document.getElementById(sliderId).value = document.getElementById(inputId).value;
+        }
 
         // 從第一頁獲取資料
         const urlParams = new URLSearchParams(window.location.search);
