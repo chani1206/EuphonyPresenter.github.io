@@ -13,7 +13,7 @@
     <br><br>
 
     <!-- 問卷表單 -->
-    <form id="questionnaireForm" method="POST" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScS5AL3M0T76yQR30HlUzidZeomwvihhv2JthqwnswUGDUi0w/formResponse">
+    <form id="questionnaireForm">
         <input type="hidden" name="entry.1077065053" id="nickname">
         <input type="hidden" name="entry.1173466811" id="age">
         <input type="hidden" name="entry.373069006" id="profession">
@@ -84,10 +84,28 @@
             }
         }
 
-        document.getElementById("questionnaireForm").onsubmit = function() {
+        document.getElementById("questionnaireForm").onsubmit = function(event) {
+            event.preventDefault(); // 阻止表單的默認提交行為
+
             let endTime = new Date(); // 記錄結束時間
             let timeTaken = (endTime - startTime) / 1000; // 計算耗時（秒）
             document.getElementById("timeTaken").value = timeTaken;
+
+            // 準備表單數據
+            const formData = new FormData(document.getElementById("questionnaireForm"));
+
+            // 發送數據到 Google 表單
+            fetch("https://docs.google.com/forms/u/0/d/e/1FAIpQLScS5AL3M0T76yQR30HlUzidZeomwvihhv2JthqwnswUGDUi0w/formResponse", {
+                method: "POST",
+                body: formData,
+                mode: "no-cors"
+            }).then(() => {
+                // 重置表單並準備下一個音頻
+                document.getElementById("questionnaireForm").reset();
+                playNext();
+            }).catch(error => {
+                console.error("Error submitting form:", error);
+            });
         }
     </script>
 </body>
