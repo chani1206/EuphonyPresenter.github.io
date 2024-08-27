@@ -25,11 +25,11 @@
         <input type="number" name="entry.1295919402" id="feeling" min="-5" max="5" required>
         <br><br>
 
-        <label for="arousal">感覺喚起量表（1 到 6）：</label>
+        <label for="arousal">感覺喚醒量表（1 到 6）：</label>
         <input type="number" name="entry.557372817" id="arousal" min="1" max="6" required>
         <br><br>
 
-        <label for="euphony">和諧度評分（0 到 10）：</label>
+        <label for="euphony">悅耳度評分（0 到 10）：</label>
         <input type="number" name="entry.1179291034" id="euphony" min="0" max="10" required>
         <br><br>
 
@@ -93,6 +93,35 @@
             }
         }
 
+        function validateInputs() {
+            const feeling = document.getElementById("feeling").value;
+            const arousal = document.getElementById("arousal").value;
+            const euphony = document.getElementById("euphony").value;
+            const investment = document.getElementById("investment").value;
+
+            if (feeling < -5 || feeling > 5) {
+                alert("感受量表的數值應該在 -5 到 5 之間。");
+                return false;
+            }
+
+            if (arousal < 1 || arousal > 6) {
+                alert("感覺喚醒量表的數值應該在 1 到 6 之間。");
+                return false;
+            }
+
+            if (euphony < 0 || euphony > 10) {
+                alert("悅耳度評分的數值應該在 0 到 10 之間。");
+                return false;
+            }
+
+            if (investment < 0 || investment > 10) {
+                alert("投資意向評分的數值應該在 0 到 10 之間。");
+                return false;
+            }
+
+            return true;
+        }
+
         function handleFormSubmit(event) {
             event.preventDefault(); // 阻止表單的默認提交行為
 
@@ -101,6 +130,10 @@
                 submitted = true;
                 document.getElementById("submitButton").value = "提交";
             } else {
+                if (!validateInputs()) {
+                    return; // 如果有驗證錯誤，停止提交
+                }
+
                 let endTime = new Date(); // 記錄結束時間
                 let timeTaken = (endTime - startTime) / 1000; // 計算耗時（秒）
                 document.getElementById("timeTaken").value = timeTaken;
@@ -113,7 +146,7 @@
                     mode: "no-cors"
                 }).then(() => {
                     document.getElementById("questionnaireForm").reset();
-                    playNext(); // 播放下一段音頻
+                    playNext(); // 播放下一段音檔
                 }).catch(error => {
                     console.error('表單提交失敗', error);
                 });
