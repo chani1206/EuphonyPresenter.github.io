@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionnaire</title>
+</head>
+<body>
+    <h1>Questionnaire</h1>
+    <audio id="audioPlayer" controls></audio>
+    <br>
+    <button onclick="playNext()">Play Next Audio</button>
+    <br><br>
+
+    <form id="questionnaireForm" method="POST" action="https://docs.google.com/forms/u/0/d/e/YOUR_GOOGLE_FORM_ID/formResponse">
+        <input type="hidden" name="entry.1077065053" id="nickname">
+        <input type="hidden" name="entry.1234567890" id="age">
+        <input type="hidden" name="entry.0987654321" id="profession">
+        <input type="hidden" name="entry.1122334455" id="musicTraining">
+        <input type="hidden" name="entry.367896919" id="audioNumber">
+        <input type="hidden" name="entry.1898504299" id="timeTaken">
+
+        <label for="feeling">Feeling Scale (-5 to 5):</label>
+        <input type="number" name="entry.1295919402" id="feeling" min="-5" max="5" required>
+        <br><br>
+
+        <label for="arousal">Felt Arousal Scale (1 to 6):</label>
+        <input type="number" name="entry.557372817" id="arousal" min="1" max="6" required>
+        <br><br>
+
+        <label for="euphony">Euphony Rating (0 to 10):</label>
+        <input type="number" name="entry.1179291034" id="euphony" min="0" max="10" required>
+        <br><br>
+
+        <label for="investment">Investment Intent Rating (0 to 10):</label>
+        <input type="number" name="entry.1743600620" id="investment" min="0" max="10" required>
+        <br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        // Get data from the first page
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("nickname").value = urlParams.get('nickname');
+        document.getElementById("age").value = urlParams.get('age');
+        document.getElementById("profession").value = urlParams.get('profession');
+        document.getElementById("musicTraining").value = urlParams.has('musicTraining') ? 'Yes' : 'No';
+
+        const audioFiles = [
+            {url: "https://docs.google.com/uc?export=open&id=1qYLmEIF4QHpPvsGFMiJzIZB4ewj32Com", originalIndex: 1},
+            {url: "https://docs.google.com/uc?export=open&id=1Bm6EiLHPnTWyLkBmYJKmDFl05cCzDkeR", originalIndex: 2},
+            {url: "https://docs.google.com/uc?export=open&id=1fw_MnhrEOZ_GRrMeipHC71Same32KyCH", originalIndex: 3},
+            {url: "https://docs.google.com/uc?export=open&id=1CFisXIRiQxzYuKiVsXSbtc8WR4PWT43k", originalIndex: 4},
+            {url: "https://docs.google.com/uc?export=open&id=1K4lyMsVblbWfCF2aJanaVaxxUhRB2Dn7", originalIndex: 5}
+            // Add all your 75 audio file links here with their original indexes
+        ];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        let shuffledAudioFiles = shuffleArray(audioFiles);
+        let currentIndex = 0;
+        let startTime;
+
+        function playNext() {
+            if (currentIndex < shuffledAudioFiles.length) {
+                let audioData = shuffledAudioFiles[currentIndex];
+                document.getElementById("audioPlayer").src = audioData.url;
+                document.getElementById("audioPlayer").play();
+                
+                document.getElementById("audioNumber").value = audioData.originalIndex; // Set original audio number
+                startTime = new Date(); // Record start time
+                
+                currentIndex++;
+            } else {
+                alert("You have reached the end of the audio files.");
+            }
+        }
+
+        document.getElementById("questionnaireForm").onsubmit = function() {
+            let endTime = new Date(); // Record end time
+            let timeTaken = (endTime - startTime) / 1000; // Calculate time taken in seconds
+            document.getElementById("timeTaken").value = timeTaken;
+        }
+    </script>
+</body>
+</html>
