@@ -10,11 +10,8 @@
     <audio id="audioPlayer" controls></audio>
     <br><br>
 
-    <!-- 使用隱藏的iframe來提交表單 -->
-    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-
     <!-- 問卷表單 -->
-    <form id="questionnaireForm" method="POST" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScS5AL3M0T76yQR30HlUzidZeomwvihhv2JthqwnswUGDUi0w/formResponse" target="hidden_iframe" onsubmit="return handleFormSubmit();">
+    <form id="questionnaireForm" onsubmit="return handleFormSubmit();">
         <input type="hidden" name="entry.1077065053" id="nickname">
         <input type="hidden" name="entry.1173466811" id="age">
         <input type="hidden" name="entry.373069006" id="profession">
@@ -83,12 +80,10 @@
                 
                 currentIndex++;
             } else {
-                // 所有音頻播放完畢，顯示結束訊息
+                // 所有音頻播放完畢，顯示感謝訊息並關閉視窗
                 document.getElementById("submitButton").style.display = 'none';
-                let endMessage = document.createElement("p");
-                endMessage.style.color = "red";
-                endMessage.textContent = "測驗結束";
-                document.body.appendChild(endMessage);
+                alert("感謝您的參與！測驗結束。");
+                window.close(); // 關閉視窗
             }
         }
 
@@ -97,24 +92,34 @@
             let timeTaken = (endTime - startTime) / 1000; // 計算耗時（秒）
             document.getElementById("timeTaken").value = timeTaken;
 
-            submitted = true;
+            const formData = new FormData(document.getElementById("questionnaireForm"));
 
-            // 改變提交按鈕為“播放下一段音頻”
-            let submitButton = document.getElementById("submitButton");
-            submitButton.value = "播放下一段音頻";
-            submitButton.type = "button";
-            submitButton.onclick = function() {
-                if (submitted) {
-                    document.getElementById("questionnaireForm").reset();
-                    playNext();
-                    // 將按鈕重新設置為提交
-                    submitButton.value = "提交";
-                    submitButton.type = "submit";
-                    submitButton.onclick = null;
-                }
-            };
+            fetch("https://docs.google.com/forms/u/0/d/e/1FAIpQLScS5AL3M0T76yQR30HlUzidZeomwvihhv2JthqwnswUGDUi0w/formResponse", {
+                method: "POST",
+                body: formData,
+                mode: "no-cors"
+            }).then(() => {
+                submitted = true;
 
-            return false; // 阻止表單提交
+                // 改變提交按鈕為“播放下一段音頻”
+                let submitButton = document.getElementById("submitButton");
+                submitButton.value = "播放下一段音頻";
+                submitButton.type = "button";
+                submitButton.onclick = function() {
+                    if (submitted) {
+                        document.getElementById("questionnaireForm").reset();
+                        playNext();
+                        // 將按鈕重新設置為提交
+                        submitButton.value = "提交";
+                        submitButton.type = "submit";
+                        submitButton.onclick = null;
+                    }
+                };
+            }).catch(error => {
+                console.error('表單提交失敗', error);
+            });
+
+            return false; // 阻止表單提交的默認行為
         }
 
         // 初始化第一段音頻播放
