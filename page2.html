@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>問卷調查</title>
 </head>
+
 <body>
     <h1>問卷調查</h1>
     <audio id="audioPlayer" controls></audio>
@@ -35,11 +37,13 @@
         <input type="number" name="entry.1743600620" id="investment" min="0" max="10" required>
         <br><br>
 
-        <input type="submit" id="submitButton" value="提交">
+        <input type="submit" id="submitButton" value="開始測驗">
     </form>
 
     <script>
         let submitted = false;
+        let currentIndex = 0;
+        let startTime;
 
         // 從第一頁獲取資料
         const urlParams = new URLSearchParams(window.location.search);
@@ -49,11 +53,11 @@
         document.getElementById("musicTraining").value = urlParams.has('musicTraining') ? '是' : '否';
 
         const audioFiles = [
-            {url: "https://docs.google.com/uc?export=open&id=1qYLmEIF4QHpPvsGFMiJzIZB4ewj32Com", originalIndex: 1},
-            {url: "https://docs.google.com/uc?export=open&id=1Bm6EiLHPnTWyLkBmYJKmDFl05cCzDkeR", originalIndex: 2},
-            {url: "https://docs.google.com/uc?export=open&id=1fw_MnhrEOZ_GRrMeipHC71Same32KyCH", originalIndex: 3},
-            {url: "https://docs.google.com/uc?export=open&id=1CFisXIRiQxzYuKiVsXSbtc8WR4PWT43k", originalIndex: 4},
-            {url: "https://docs.google.com/uc?export=open&id=1K4lyMsVblbWfCF2aJanaVaxxUhRB2Dn7", originalIndex: 5}
+            { url: "https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/audio/Thingnario%20%E6%85%A7%E6%99%AF%E7%A7%91%E6%8A%80_1min.mp3?raw=true", originalIndex: 1 },
+            { url: "https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/audio/%E4%B8%BB%E5%BC%B5%E6%95%B8%E6%93%9A%EF%BD%9CNumbers_1min.mp3?raw=true", originalIndex: 2 },
+            { url: "https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/audio/%E4%BA%8C%E6%8B%BE%E8%A1%AB_%E5%85%A7%E5%AE%9A(%E8%82%A1)%E5%85%AC%E5%8F%B8_1min.mp3?raw=true", originalIndex: 3 },
+            { url: "https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/audio/%E6%8F%9A%E6%8F%9A%E5%89%B5%E6%96%B0%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8_1min.mp3?raw=true", originalIndex: 4 },
+            { url: "https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/audio/%E9%BB%9E%E9%80%9A%E7%A7%91%E6%8A%80%EF%BD%9CPTCOM%20Technology_1min.mp3?raw=true", originalIndex: 5 }
             // 在此處添加所有 75 個音頻檔案鏈接及其原始索引
         ];
 
@@ -66,64 +70,58 @@
         }
 
         let shuffledAudioFiles = shuffleArray(audioFiles);
-        let currentIndex = 0;
-        let startTime;
 
         function playNext() {
             if (currentIndex < shuffledAudioFiles.length) {
                 let audioData = shuffledAudioFiles[currentIndex];
                 document.getElementById("audioPlayer").src = audioData.url;
                 document.getElementById("audioPlayer").play();
-                
+
                 document.getElementById("audioNumber").value = audioData.originalIndex; // 設置原始音頻編號
                 startTime = new Date(); // 記錄開始時間
-                
+
                 currentIndex++;
             } else {
                 // 所有音頻播放完畢，顯示感謝訊息並關閉視窗
                 document.getElementById("submitButton").style.display = 'none';
                 alert("感謝您的參與！測驗結束。");
-                window.close(); // 關閉視窗
+                if (window.opener) {
+                    window.close(); // 關閉視窗
+                } else {
+                    alert("請手動關閉這個視窗。");
+                }
             }
         }
 
-        function handleFormSubmit() {
-            let endTime = new Date(); // 記錄結束時間
-            let timeTaken = (endTime - startTime) / 1000; // 計算耗時（秒）
-            document.getElementById("timeTaken").value = timeTaken;
+        function handleFormSubmit(event) {
+            event.preventDefault(); // 阻止表單的默認提交行為
 
-            const formData = new FormData(document.getElementById("questionnaireForm"));
-
-            fetch("https://docs.google.com/forms/u/0/d/e/1FAIpQLScS5AL3M0T76yQR30HlUzidZeomwvihhv2JthqwnswUGDUi0w/formResponse", {
-                method: "POST",
-                body: formData,
-                mode: "no-cors"
-            }).then(() => {
+            if (!submitted) {
+                playNext();
                 submitted = true;
+                document.getElementById("submitButton").value = "提交";
+            } else {
+                let endTime = new Date(); // 記錄結束時間
+                let timeTaken = (endTime - startTime) / 1000; // 計算耗時（秒）
+                document.getElementById("timeTaken").value = timeTaken;
 
-                // 改變提交按鈕為“播放下一段音頻”
-                let submitButton = document.getElementById("submitButton");
-                submitButton.value = "播放下一段音頻";
-                submitButton.type = "button";
-                submitButton.onclick = function() {
-                    if (submitted) {
-                        document.getElementById("questionnaireForm").reset();
-                        playNext();
-                        // 將按鈕重新設置為提交
-                        submitButton.value = "提交";
-                        submitButton.type = "submit";
-                        submitButton.onclick = null;
-                    }
-                };
-            }).catch(error => {
-                console.error('表單提交失敗', error);
-            });
+                const formData = new FormData(document.getElementById("questionnaireForm"));
 
-            return false; // 阻止表單提交的默認行為
+                fetch("https://docs.google.com/forms/u/0/d/e/1FAIpQLScS5AL3M0T76yQR30HlUzidZeomwvihhv2JthqwnswUGDUi0w/formResponse", {
+                    method: "POST",
+                    body: formData,
+                    mode: "no-cors"
+                }).then(() => {
+                    document.getElementById("questionnaireForm").reset();
+                    playNext(); // 播放下一段音頻
+                }).catch(error => {
+                    console.error('表單提交失敗', error);
+                });
+            }
         }
 
-        // 初始化第一段音頻播放
-        playNext();
+        document.getElementById("submitButton").addEventListener("click", handleFormSubmit);
     </script>
 </body>
+
 </html>

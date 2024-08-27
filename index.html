@@ -1,32 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research Introduction</title>
+    <title>以聲服人聲音研究</title>
 </head>
+
 <body>
-    <h1>Welcome to the Study</h1>
-    <p>This research is about [Research Background]. Please fill in the following information before proceeding.</p>
+    <h1>以聲服人聲音研究</h1>
+    <p>假設您正參與募資簡報，以您主觀且直覺的感知填寫以下評分，感受量表：非常不好-5/非常好+5、感覺喚醒量表：非常平靜1/非常亢奮6、悅耳度評分：非常難聽0/非常好聽10、投資意向評分：完全不想投資0/絕對會投資10。請填寫以下資料後繼續。
+    </p>
 
     <form id="introForm" action="page2.html" method="GET">
-        <label for="nickname">Nickname:</label>
+        <label for="nickname">暱稱：</label>
         <input type="text" name="nickname" id="nickname" required>
         <br><br>
 
-        <label for="age">Age:</label>
+        <label for="age">年齡：</label>
         <input type="number" name="age" id="age" required>
         <br><br>
 
-        <label for="profession">Profession:</label>
+        <label for="profession">職業：</label>
         <input type="text" name="profession" id="profession" required>
         <br><br>
 
-        <label for="musicTraining">Do you have any music or sound training/education?</label>
+        <label for="musicTraining">您是否有任何音樂或聲音訓練/教育背景？</label>
         <input type="checkbox" name="musicTraining" id="musicTraining">
         <br><br>
 
-        <input type="submit" value="Next">
+        <input type="submit" value="開始測驗">
     </form>
 </body>
+
 </html>
