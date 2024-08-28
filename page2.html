@@ -72,26 +72,28 @@
         </div>
 
         <!-- 悅耳度評分 -->
-        <label class="question-label" for="euphony">悅耳度評分（0 到 10）：</label>
+        <label class="question-label" for="euphony">悅耳度評分（0 到 100）：</label>
+        <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/SQ_scale.png?raw=true"
+            alt="聲音品質"> <!-- 評分示意圖 -->
         <div class="slider-container">
             <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/non-Euphony.webp?raw=true"
                 alt="低和諧度"> <!-- 左側示意圖 -->
-            <input type="range" class="slider" id="euphonySlider" min="0" max="10" value="0"
+            <input type="range" class="slider" id="euphonySlider" min="0" max="100" value="0"
                 oninput="syncSlider('euphonySlider', 'euphony')">
-            <input type="number" name="entry.1179291034" id="euphony" min="0" max="10" value="0" class="slider-value"
+            <input type="number" name="entry.1179291034" id="euphony" min="0" max="100" value="0" class="slider-value"
                 oninput="syncInput('euphony', 'euphonySlider')" required>
             <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/Euphony.webp?raw=true"
                 alt="高和諧度"> <!-- 右側示意圖 -->
         </div>
 
         <!-- 投資意向評分 -->
-        <label class="question-label" for="investment">投資意向評分（0 到 10）：</label>
+        <label class="question-label" for="investment">投資意向評分（1 到 5）：</label>
         <div class="slider-container">
             <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/Investment_Intent_L.webp?raw=true"
                 alt="低投資意向"> <!-- 左側示意圖 -->
-            <input type="range" class="slider" id="investmentSlider" min="0" max="10" value="0"
+            <input type="range" class="slider" id="investmentSlider" min="1" max="5" value="1"
                 oninput="syncSlider('investmentSlider', 'investment')">
-            <input type="number" name="entry.1743600620" id="investment" min="0" max="10" value="0" class="slider-value"
+            <input type="number" name="entry.1743600620" id="investment" min="1" max="5" value="1" class="slider-value"
                 oninput="syncInput('investment', 'investmentSlider')" required>
             <img src="https://github.com/chani1206/EuphonyPresenter.github.io/blob/main/image/Investment_Intent_H.webp?raw=true"
                 alt="高投資意向"> <!-- 右側示意圖 -->
